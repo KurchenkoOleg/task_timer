@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import ReactModal from 'react-modal';
-import { BarChart, Bar, XAxis, YAxis, Legend } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend } from 'recharts';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
   Table,
@@ -13,38 +14,42 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import { indigo500} from 'material-ui/styles/colors';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import Menu from './Menu';
 import TaskButton from './TaskButton';
 import { formatDateTime, timeDifference } from './formatDateTime';
+import './App.css';
 
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
+// This replaces the textColor value on the palette
+// and then update the keys for each component that depends on it.
+// More on Colors: http://www.material-ui.com/#/customization/colors
+const muiTheme = getMuiTheme({
+  palette: {
+    textColor: indigo500,
   },
-};
+});
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.handleFindTask = this.handleFindTask.bind(this);
     this.handleStartOrStopTask = this.handleStartOrStopTask.bind(this);
     this.handleTaskInfo = this.handleTaskInfo.bind(this);
     this.handleTaskDelete = this.handleTaskDelete.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleTaskNameChange = this.handleTaskNameChange.bind(this);
   }
 
   componentDidMount() {
     if (this.props.activeTask) {
       this.startTimer();
-      this.props.onTimerTick(this.props.activeTask.timeStart); // render time immediately
+      this.props.onTimerTick(timeDifference(
+        Date.now().toString(),
+        this.props.activeTask.timeStart,
+      )); // render time immediately
     }
   }
 
@@ -52,39 +57,38 @@ class App extends Component {
     this.stopTimer();
   }
 
+  handleTaskNameChange(event, newValue) {
+    this.props.onSetTaskName(newValue);
+  }
+
   handleStartOrStopTask() {
     const locActiveTask = this.props.activeTask;
     if (locActiveTask) {
-      console.log('stopTask', this.taskInput.value);
+      console.log('stopTask', this.props.taskName);
 
-      if (this.taskInput.value === '') {
+      if (this.props.taskName === '') {
         this.props.onModalOpen();
         return;
       }
 
-      locActiveTask.name = this.taskInput.value;
+      locActiveTask.name = this.props.taskName;
       locActiveTask.timeEnd = Date.now().toString();
 
       this.props.onStopTask(locActiveTask);
-      this.taskInput.value = '';
+      this.props.onSetTaskName('');
       this.stopTimer();
     } else {
-      console.log('startTask', this.taskInput.value);
+      console.log('startTask', this.props.taskName);
 
       this.props.onStartTask({
         id: Date.now().toString(),
-        name: this.taskInput.value,
+        name: this.props.taskName,
         number: this.props.lastNumber,
         timeStart: Date.now().toString(),
         timeEnd: '',
       });
       this.startTimer();
     }
-  }
-
-  handleFindTask() {
-    console.log('handleFindTask', this.searchInput.value);
-    this.props.onFindTask(this.searchInput.value);
   }
 
   handleTaskInfo(id) {
@@ -156,92 +160,98 @@ class App extends Component {
   }
 
   render() {
+    const actions = [
+      <RaisedButton
+        label="Cancel"
+        primary={true}
+        onClick={this.handleCloseModal}
+      />,
+    ];
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          <div>
-            <Menu />
-            <div>
-              <input type="text" ref={(input) => { this.searchInput = input; }} />
-              <button onClick={this.handleFindTask}>Find task</button>
-            </div>
-            <div>
-              <input type="text" ref={(input) => { this.taskInput = input; }} />
-              <button onClick={this.handleStartOrStopTask}>{(this.props.activeTask) ? 'Stop' : 'Start'}</button>
-              <h2>{(this.props.activeTask) ? this.props.timeElapsed : '00:00:00'}</h2>
-            </div>
-            <Table height="300px">
-              <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
-                <TableRow>
-                  <TableHeaderColumn>№</TableHeaderColumn>
-                  <TableHeaderColumn>Name</TableHeaderColumn>
-                  <TableHeaderColumn>Time Start</TableHeaderColumn>
-                  <TableHeaderColumn>Time End</TableHeaderColumn>
-                  <TableHeaderColumn>Time Spent</TableHeaderColumn>
-                  <TableHeaderColumn />
-                  <TableHeaderColumn />
-                </TableRow>
-              </TableHeader>
-              <TableBody displayRowCheckbox={false}>
-                {this.props.tasks.map(task => (
-                  <TableRow key={task.id}>
-                    <TableRowColumn>{task.number}</TableRowColumn>
-                    <TableRowColumn>{task.name}</TableRowColumn>
-                    <TableRowColumn>{formatDateTime(task.timeStart)}</TableRowColumn>
-                    <TableRowColumn>{formatDateTime(task.timeEnd)}</TableRowColumn>
-                    <TableRowColumn>{
-                      timeDifference(task.timeEnd, task.timeStart)}
-                    </TableRowColumn>
-                    <TableRowColumn>
-                      <TaskButton
-                        onClick={this.handleTaskInfo}
-                        text="Info"
-                        task={task}
-                      />
-                    </TableRowColumn>
-                    <TableRowColumn>
-                      <TaskButton
-                        onClick={this.handleTaskDelete}
-                        text="Delete"
-                        task={task}
-                      />
-                    </TableRowColumn>
-                  </TableRow>))
-                }
-              </TableBody>
-            </Table>
-            <BarChart
-              width={600}
-              height={300}
-              data={this.ComputeChartData()}
-              margin={
-                {
-                  top: 5, right: 30, left: 20, bottom: 5,
-                }
-              }
-            >
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Legend />
-              <Bar
-                dataKey="time"
-                fill="#8884d8"
-                name="Minutes in this hours"
-              />
-            </BarChart>
+          <Menu />
+          <div className="center">
+            <TextField
+              floatingLabelText="Name of your task"
+              onChange={this.handleTaskNameChange}
+              value={this.props.taskName}
+            />
           </div>
-          <ReactModal
-            isOpen={this.props.showModal}
-            contentLabel="Empty task name"
-            style={customStyles}
+          <div className="center circle-slide"><h2 className="taskTime">{(this.props.activeTask) ? this.props.timeElapsed : '00:00:00'}</h2></div>
+          <div className="center">
+            <RaisedButton className="center buttonStart" onClick={this.handleStartOrStopTask}>{(this.props.activeTask) ? 'Stop' : 'Start'}</RaisedButton>
+          </div>
+              <Table height="300px">
+                <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+                  <TableRow>
+                    <TableHeaderColumn>№</TableHeaderColumn>
+                    <TableHeaderColumn>Name</TableHeaderColumn>
+                    <TableHeaderColumn>Time Start</TableHeaderColumn>
+                    <TableHeaderColumn>Time End</TableHeaderColumn>
+                    <TableHeaderColumn>Time Spent</TableHeaderColumn>
+                    <TableHeaderColumn />
+                    <TableHeaderColumn />
+                  </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                  {this.props.tasks.map(task => (
+                    <TableRow key={task.id}>
+                      <TableRowColumn>{task.number}</TableRowColumn>
+                      <TableRowColumn>{task.name}</TableRowColumn>
+                      <TableRowColumn>{formatDateTime(task.timeStart)}</TableRowColumn>
+                      <TableRowColumn>{formatDateTime(task.timeEnd)}</TableRowColumn>
+                      <TableRowColumn>{
+                        timeDifference(task.timeEnd, task.timeStart)}
+                      </TableRowColumn>
+                      <TableRowColumn>
+                        <TaskButton
+                          onClick={this.handleTaskInfo}
+                          text="Info"
+                          task={task}
+                        />
+                      </TableRowColumn>
+                      <TableRowColumn>
+                        <TaskButton
+                          onClick={this.handleTaskDelete}
+                          text="Delete"
+                          task={task}
+                        />
+                      </TableRowColumn>
+                    </TableRow>))
+                  }
+                </TableBody>
+              </Table>
+            <ResponsiveContainer width="90%" height={300}>
+              <BarChart
+                data={this.ComputeChartData()}
+                margin={
+                {
+                  top: 70, right: 30, left: 20, bottom: 5,
+                }
+                }
+              >
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Legend />
+                <Bar
+                  dataKey="time"
+                  fill="#8884d8"
+                  name="Minutes in this hours"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          <Dialog
+            title="Empty task name"
+            titleClassName="modalTitle"
+            actions={actions}
+            modal={false}
+            open={this.props.showModal}
+            onRequestClose={this.handleCloseModal}
           >
-            <h1>Empty task name</h1>
-            <p>
-              You are trying to close your task without name.
-              Please, enter task name and close again.
-            </p>
-            <RaisedButton onClick={this.handleCloseModal}>Close</RaisedButton>
-          </ReactModal>
+            You are trying to close your task without name.
+            Please, enter task name and close again.
+          </Dialog>
         </div>
       </MuiThemeProvider>);
   }
@@ -273,20 +283,24 @@ App.propTypes = {
   onModalOpen: PropTypes.func.isRequired,
   onModalClosed: PropTypes.func.isRequired,
   onFindTask: PropTypes.func.isRequired,
+  taskName: PropTypes.string,
+  onSetTaskName: PropTypes.func.isRequired,
 };
 
 App.defaultProps = {
-  activeTask: undefined,
+  activeTask: null,
   timeElapsed: '',
+  taskName: '',
 };
 
 export default connect(
   (state, ownProps) => ({
-    tasks: state.tasks.filter(task => task.name.includes(state.filterTasks)),
+    tasks: state.tasks,
     activeTask: state.activeTask,
     timeElapsed: state.timeElapsed,
     showModal: state.showModal,
     lastNumber: state.lastNumber,
+    taskName: state.taskName,
     ownProps,
   }),
   dispatch => ({
@@ -303,14 +317,14 @@ export default connect(
     onTimerTick: (payload) => {
       dispatch({ type: 'TIMER_TICK', payload });
     },
-    onFindTask: (name) => {
-      dispatch({ type: 'FIND_TASK', payload: name });
-    },
     onModalOpen: () => {
       dispatch({ type: 'OPEN_MODAL' });
     },
     onModalClosed: () => {
       dispatch({ type: 'MODAL_IS_CLOSED' });
+    },
+    onSetTaskName: (payload) => {
+      dispatch({ type: 'SET_TASK_NAME', payload });
     },
   }),
 )(App);

@@ -4,16 +4,19 @@ function padLeft(int) {
   return pad.substring(0, pad.length - str.length) + str;
 }
 
-
 export function formatDateTime(stringMilliseconds) {
   const d = new Date(Number(stringMilliseconds));
-  return `${[
-    padLeft(d.getDate()),
-    padLeft(d.getMonth() + 1),
-    d.getFullYear()].join('/')} ${
+  return `${
     [padLeft(d.getHours()),
       padLeft(d.getMinutes()),
       padLeft(d.getSeconds())].join(':')}`;
+  // return `${[
+  //   padLeft(d.getDate()),
+  //   padLeft(d.getMonth() + 1),
+  //   d.getFullYear()].join('/')} ${
+  //   [padLeft(d.getHours()),
+  //     padLeft(d.getMinutes()),
+  //     padLeft(d.getSeconds())].join(':')}`;
 }
 
 export function timeDifference(stringMilliseconds2, stringMilliseconds1) {

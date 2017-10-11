@@ -4,8 +4,8 @@ import tasks from './tasks';
 import lastNumber from './lastNumber';
 import activeTask from './activeTask';
 import timeElapsed from './timeElapsed';
-import filterTasks from './filterTasks';
 import showModal from './showModal';
+import taskName from './taskName';
 
 export default combineReducers({
   routing: routerReducer,
@@ -13,6 +13,6 @@ export default combineReducers({
   lastNumber,
   activeTask,
   timeElapsed,
-  filterTasks,
   showModal,
+  taskName,
 });

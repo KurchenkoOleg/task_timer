@@ -26,13 +26,13 @@ export default class TaskButton extends Component {
 }
 
 TaskButton.propTypes = {
-  task: PropTypes.instanceOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    number: PropTypes.number,
-    timeStart: PropTypes.string,
-    timeEnd: PropTypes.string,
-  })).isRequired,
+  // task: PropTypes.instanceOf(PropTypes.shape({
+  //   id: PropTypes.string,
+  //   name: PropTypes.string,
+  //   number: PropTypes.number,
+  //   timeStart: PropTypes.string,
+  //   timeEnd: PropTypes.string,
+  // })).isRequired,
   text: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
