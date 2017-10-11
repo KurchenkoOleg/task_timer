@@ -14,7 +14,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import { indigo500} from 'material-ui/styles/colors';
+import { indigo500 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import Menu from './Menu';
