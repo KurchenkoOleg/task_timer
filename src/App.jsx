@@ -265,13 +265,13 @@ App.propTypes = {
     timeStart: PropTypes.string,
     timeEnd: PropTypes.string,
   })).isRequired,
-  activeTask: PropTypes.instanceOf(PropTypes.shape({
+  activeTask: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
     number: PropTypes.number,
     timeStart: PropTypes.string,
     timeEnd: PropTypes.string,
-  })),
+  }),
   timeElapsed: PropTypes.string,
   showModal: PropTypes.bool.isRequired,
   lastNumber: PropTypes.number.isRequired,

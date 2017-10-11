@@ -30,13 +30,13 @@ const TaskInfo = function (props) {
 };
 
 TaskInfo.propTypes = {
-  task: PropTypes.instanceOf(PropTypes.shape({
+  task: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
     number: PropTypes.number,
     timeStart: PropTypes.string,
     timeEnd: PropTypes.string,
-  })),
+  }),
 };
 
 TaskInfo.defaultProps = {
