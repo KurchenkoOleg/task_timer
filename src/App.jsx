@@ -182,65 +182,65 @@ class App extends Component {
           <div className="center">
             <RaisedButton className="center buttonStart" onClick={this.handleStartOrStopTask}>{(this.props.activeTask) ? 'Stop' : 'Start'}</RaisedButton>
           </div>
-              <Table height="300px">
-                <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
-                  <TableRow>
-                    <TableHeaderColumn>№</TableHeaderColumn>
-                    <TableHeaderColumn>Name</TableHeaderColumn>
-                    <TableHeaderColumn>Time Start</TableHeaderColumn>
-                    <TableHeaderColumn>Time End</TableHeaderColumn>
-                    <TableHeaderColumn>Time Spent</TableHeaderColumn>
-                    <TableHeaderColumn />
-                    <TableHeaderColumn />
-                  </TableRow>
-                </TableHeader>
-                <TableBody displayRowCheckbox={false}>
-                  {this.props.tasks.map(task => (
-                    <TableRow key={task.id}>
-                      <TableRowColumn>{task.number}</TableRowColumn>
-                      <TableRowColumn>{task.name}</TableRowColumn>
-                      <TableRowColumn>{formatDateTime(task.timeStart)}</TableRowColumn>
-                      <TableRowColumn>{formatDateTime(task.timeEnd)}</TableRowColumn>
-                      <TableRowColumn>{
-                        timeDifference(task.timeEnd, task.timeStart)}
-                      </TableRowColumn>
-                      <TableRowColumn>
-                        <TaskButton
-                          onClick={this.handleTaskInfo}
-                          text="Info"
-                          task={task}
-                        />
-                      </TableRowColumn>
-                      <TableRowColumn>
-                        <TaskButton
-                          onClick={this.handleTaskDelete}
-                          text="Delete"
-                          task={task}
-                        />
-                      </TableRowColumn>
-                    </TableRow>))
-                  }
-                </TableBody>
-              </Table>
-            <ResponsiveContainer width="90%" height={300}>
-              <BarChart
-                data={this.ComputeChartData()}
-                margin={
-                {
-                  top: 70, right: 30, left: 20, bottom: 5,
+          <Table height="300px">
+            <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+              <TableRow>
+                <TableHeaderColumn>№</TableHeaderColumn>
+                <TableHeaderColumn>Name</TableHeaderColumn>
+                <TableHeaderColumn>Time Start</TableHeaderColumn>
+                <TableHeaderColumn>Time End</TableHeaderColumn>
+                <TableHeaderColumn>Time Spent</TableHeaderColumn>
+                <TableHeaderColumn />
+                <TableHeaderColumn />
+              </TableRow>
+            </TableHeader>
+            <TableBody displayRowCheckbox={false}>
+              {this.props.tasks.map(task => (
+                <TableRow key={task.id}>
+                  <TableRowColumn>{task.number}</TableRowColumn>
+                  <TableRowColumn>{task.name}</TableRowColumn>
+                  <TableRowColumn>{formatDateTime(task.timeStart)}</TableRowColumn>
+                  <TableRowColumn>{formatDateTime(task.timeEnd)}</TableRowColumn>
+                  <TableRowColumn>{
+                    timeDifference(task.timeEnd, task.timeStart)}
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    <TaskButton
+                      onClick={this.handleTaskInfo}
+                      text="Info"
+                      task={task}
+                    />
+                  </TableRowColumn>
+                  <TableRowColumn>
+                    <TaskButton
+                      onClick={this.handleTaskDelete}
+                      text="Delete"
+                      task={task}
+                    />
+                  </TableRowColumn>
+                </TableRow>))
                 }
-                }
-              >
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Legend />
-                <Bar
-                  dataKey="time"
-                  fill="#8884d8"
-                  name="Minutes in this hours"
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            </TableBody>
+          </Table>
+          <ResponsiveContainer width="90%" height={300}>
+            <BarChart
+              data={this.ComputeChartData()}
+              margin={
+              {
+                top: 70, right: 30, left: 20, bottom: 5,
+              }
+              }
+            >
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Legend />
+              <Bar
+                dataKey="time"
+                fill="#8884d8"
+                name="Minutes in this hours"
+              />
+            </BarChart>
+          </ResponsiveContainer>
           <Dialog
             title="Empty task name"
             titleClassName="modalTitle"
@@ -249,9 +249,9 @@ class App extends Component {
             open={this.props.showModal}
             onRequestClose={this.handleCloseModal}
           >
-            You are trying to close your task without name.
-            Please, enter task name and close again.
-          </Dialog>
+          You are trying to close your task without name.
+          Please, enter task name and close again.
+        </Dialog>
         </div>
       </MuiThemeProvider>);
   }
@@ -282,7 +282,6 @@ App.propTypes = {
   onTimerTick: PropTypes.func.isRequired,
   onModalOpen: PropTypes.func.isRequired,
   onModalClosed: PropTypes.func.isRequired,
-  onFindTask: PropTypes.func.isRequired,
   taskName: PropTypes.string,
   onSetTaskName: PropTypes.func.isRequired,
 };
