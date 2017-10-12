@@ -149,7 +149,7 @@ class App extends Component {
     const actions = [
       <RaisedButton
         label="Cancel"
-        primary={true}
+        primary
         onClick={this.handleCloseModal}
       />,
     ];

@@ -11,6 +11,6 @@ const NotFound = function () {
       </div>
     </div>
   );
-}
+};
 
 export default NotFound;
