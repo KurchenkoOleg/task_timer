@@ -11,7 +11,7 @@ import { loadState, saveState } from './localStorage';
 
 import './index.css';
 import App from './components/App/App';
-import About from './components/Abount/About';
+import About from './components/About/About';
 import Task from './components/TaskInfo/TaskInfo';
 import NotFound from './components/NotFound/NotFound';
 import reducer from './reducers';
@@ -20,7 +20,7 @@ const persistedState = loadState();
 const store = createStore(
   reducer,
   persistedState,
-  //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
 
 store.subscribe(throttle(() => {
