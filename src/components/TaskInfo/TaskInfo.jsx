@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import Menu from './Menu';
-import { formatDateTime, timeDifference } from './formatDateTime';
+import Menu from '../Menu/Menu';
+import { formatDateTime, timeDifference } from '../../utils/formatDateTime';
 
 
 const TaskInfo = function (props) {

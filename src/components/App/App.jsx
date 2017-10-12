@@ -17,11 +17,10 @@ import {
 import { indigo500 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import Menu from './Menu';
-import TaskButton from './TaskButton';
-import { formatDateTime, timeDifference } from './formatDateTime';
+import Menu from '../Menu/Menu';
+import TaskButton from '../TaskButton/TaskButton';
+import { formatDateTime, timeDifference } from '../../utils/formatDateTime';
 import './App.css';
-
 
 // This replaces the textColor value on the palette
 // and then update the keys for each component that depends on it.
@@ -64,22 +63,16 @@ class App extends Component {
   handleStartOrStopTask() {
     const locActiveTask = this.props.activeTask;
     if (locActiveTask) {
-      console.log('stopTask', this.props.taskName);
-
       if (this.props.taskName === '') {
         this.props.onModalOpen();
         return;
       }
-
       locActiveTask.name = this.props.taskName;
       locActiveTask.timeEnd = Date.now().toString();
-
       this.props.onStopTask(locActiveTask);
       this.props.onSetTaskName('');
       this.stopTimer();
     } else {
-      console.log('startTask', this.props.taskName);
-
       this.props.onStartTask({
         id: Date.now().toString(),
         name: this.props.taskName,
@@ -92,13 +85,10 @@ class App extends Component {
   }
 
   handleTaskInfo(id) {
-    console.log('handleTaskInfo', id);
-
     this.props.router.push(`/taskInfo/${id}`);
   }
 
   handleTaskDelete(id) {
-    console.log('handleTaskDelete', id);
     this.props.onDeleteTask(id);
   }
 
@@ -111,7 +101,6 @@ class App extends Component {
         )),
         1000,
       );
-      console.log('Timer is started');
     }
   }
 
@@ -119,13 +108,10 @@ class App extends Component {
     if (this.timerID) {
       clearInterval(this.timerID);
       this.timerID = undefined;
-      console.log('Timer is stopped');
     }
   }
 
   handleCloseModal() {
-    console.log('modalIsClosed');
-
     this.props.onModalClosed();
   }
 

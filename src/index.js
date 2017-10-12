@@ -10,10 +10,10 @@ import throttle from 'lodash/throttle';
 import { loadState, saveState } from './localStorage';
 
 import './index.css';
-import App from './App';
-import About from './About';
-import Task from './TaskInfo';
-import NotFound from './NotFound';
+import App from './components/App/App';
+import About from './components/Abount/About';
+import Task from './components/TaskInfo/TaskInfo';
+import NotFound from './components/NotFound/NotFound';
 import reducer from './reducers';
 
 const persistedState = loadState();

@@ -10,11 +10,12 @@
 }
 
 .circle-slide {
-    height: 200px;
+    height: 10rem;
+    width: 10rem;
     border-radius: 50%;
     border: 2px solid lightgray;
     box-shadow: 0 1px 1px grey;
-    line-height: 200px;
+    line-height: 10rem;
 }
 
 .taskTime {
