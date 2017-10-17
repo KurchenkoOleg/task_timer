@@ -5,9 +5,8 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { Router, Route, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-import throttle from 'lodash/throttle';
 
-import { loadState, saveState } from './localStorage';
+import { loadState} from './localStorage';
 
 import './index.css';
 import App from './components/App/App';
@@ -20,16 +19,8 @@ const persistedState = loadState();
 const store = createStore(
   reducer,
   persistedState,
-  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 );
-
-store.subscribe(throttle(() => {
-  saveState({
-    tasks: store.getState().tasks,
-    activeTask: store.getState().activeTask,
-    lastNumber: store.getState().lastNumber,
-  });
-}, 1000));
 
 const history = syncHistoryWithStore(hashHistory, store);
 

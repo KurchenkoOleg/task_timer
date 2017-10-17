@@ -1,6 +1,7 @@
 export const loadState = () => {
+  console.log('loadState');
   try {
-    const serializedState = localStorage.getItem('state');
+      const serializedState = localStorage.getItem('state'); // eslint-disable-line
     if (serializedState === null) {
       return undefined;
     }
@@ -12,9 +13,10 @@ export const loadState = () => {
 };
 
 export const saveState = (state) => {
+  console.log('saveState');
   try {
     const serializedState = JSON.stringify(state);
-    localStorage.setItem('state', serializedState);
+    localStorage.setItem('state', serializedState); // eslint-disable-line
   } catch (err) {
     console.log(err);
   }
